@@ -16,6 +16,7 @@ Flask-Caching==2.3.1
 Flask-MySQLdb==2.0.0
 Flask-WTF==1.2.2
 fonttools==4.56.0
+gunicorn==23.0.0
 ipykernel==6.29.5
 ipython==9.0.2
 ipython_pygments_lexers==1.1.1
