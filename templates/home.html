@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section id="home" class="welcome-section">
+        <div class="welcome-overlay"></div>
+        <div class="welcome-content">
+            <h1 class="animate-title">Welcome to LoanWise</h1>
+            <p class="animate-subtitle">Your one-stop solution for loan default predictions.</p>
+            <div class="cta-container">
+                <a href="#description" class="cta-button">Learn More</a>
+                <a href="#visualization" class="cta-button cta-secondary">View Insights</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll Down</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    
+<!-- Dataset Variables Section HTML -->
+<section id="variables" class="dataset-variables">
+    <div class="container">
+      <h2 class="section-title">Dataset Variables</h2>
+      
+      <div class="variables-grid">
+        <!-- Customer's Age -->
+        <div class="variable-card">
+          <div class="icon-container">
+            <i class="fas fa-user"></i>
+          </div>
+          <h3>Customer's Age</h3>
+        </div>
+        
+        <!-- Customer's Gender -->
+        <div class="variable-card">
+          <div class="icon-container">
+            <i class="fas fa-venus-mars"></i>
+          </div>
+          <h3>Customer's Gender</h3>
+        </div>
+        
+        <!-- Credit Card Limit Balance -->
+        <div class="variable-card">
+          <div class="icon-container">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <h3>Credit Card Limit Balance</h3>
+        </div>
+        
+        <!-- Education Level -->
+        <div class="variable-card">
+          <div class="icon-container">
+            <i class="fas fa-book"></i>
+          </div>
+          <h3>Education Level</h3>
+        </div>
+        
+        <!-- Billing and Payment Amounts -->
+        <div class="variable-card">
+          <div class="icon-container">
+            <i class="fas fa-file-invoice-dollar"></i>
+          </div>
+          <h3>Billing and Payment Amounts</h3>
+        </div>
+        
+        <!-- Monthly Income -->
+        <div class="variable-card">
+          <div class="icon-container">
+            <i class="fas fa-building"></i>
+          </div>
+          <h3>Monthly Income</h3>
+        </div>
+        
+        <!-- Number of Dependents -->
+        <div class="variable-card">
+          <div class="icon-container">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3>Number of Dependents</h3>
+        </div>
+        
+        <!-- Other Variables -->
+        <div class="variable-card">
+          <div class="icon-container">
+            <i class="fas fa-assistive-listening-systems"></i>
+          </div>
+          <h3>Other Variables</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="description" class="my-5 position-relative">
+    <div class="background">
+        <div class="overlay"></div> <!-- Gradient Overlay for better text contrast -->
+        <div class="text shadow">
+            <h1 class="text-primary">Overview</h1>
+            <p class="lead">
+                LoanWise provides a predictive model to assess the risk of loan defaults based on various factors.
+            </p>
+            <p>
+                <strong class="text-warning">
+                    Using 23 variables, we developed a regression model to predict a customer's default likelihood.
+                </strong>
+            </p>
+            <p>
+                The dataset contains information from over 
+                <strong class="text-success">30,000 customers</strong> in Taiwan. The currency used is Taiwan Dollar (TN$).
+            </p>
+        </div>
+    </div>
+</section>
+
+  <section id="visualization" class="visualization-section">
+    <div class="container">
+      <div class="visualization-content">
+        <div class="text-content">
+          <h2 class="section-title">Data Visualization</h2>
+          <p class="section-description">Here you can find visualizations related to loan predictions.</p>
+          <div class="button-container">
+            <a href="{{ url_for('visualizations') }}" class="viz-button">Explore All Visualizations</a>
+          </div>
+        </div>
+        
+        <div class="visualization-preview">
+          <!-- Visualization preview on the right side -->
+          <div class="placeholder-viz">
+            <i class="fas fa-chart-line"></i>
+            <i class="fas fa-chart-pie"></i>
+            <i class="fas fa-chart-bar"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="prediction" class="prediction-section">
+    <div class="container">
+      <div class="prediction-content">
+        <h2 class="section-title">Loan Prediction</h2>
+        <p class="section-description">Click on the Predict button to find out if a loan is likely to default.</p>
+        
+        <div class="prediction-cta">
+          <a href="{{ url_for('predict') }}" class="prediction-button">Predict Now</a>
+        </div>
+        
+        <div class="prediction-graphic">
+          <div class="prediction-icons">
+            <i class="fas fa-calculator"></i>
+            <i class="fas fa-arrow-right"></i>
+            <i class="fas fa-file-invoice-dollar"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>LoanWise</h3>
+                <p>Intelligent loan default prediction platform</p>
+            </div>
+            
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#description">Overview</a></li>
+                        <li><a href="#visualization">Visualizations</a></li>
+                    </ul>
+                </div>
+                
+                <div class="link-group">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="link-group">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:shubanborkar@gmail.com">shubanborkar@gmail.com</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 LoanWise. All rights reserved.</p>
+            <div class="social-icons">
+                <a href="https://www.linkedin.com/in/shuban-borkar/" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://github.com/shubanborkar" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+{% endblock %}

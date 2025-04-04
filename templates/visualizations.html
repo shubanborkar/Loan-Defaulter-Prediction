@@ -1,0 +1,501 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debt Ratio v/s Monthly Income</title>
+    <!-- Import Montserrat font from Google Fonts -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for footer icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        .title {
+            font-family: 'Montserrat', sans-serif;
+            color: #0066CC;  /* Blue color */
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+        .visualization-area {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .text-section {
+            flex: 1;
+            padding-right: 20px;
+            min-width: 300px;
+        }
+        .graph-section {
+            flex: 2;
+            min-width: 500px;
+        }
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .section-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #555;
+        }
+        #plotly-graph {
+            width: 100%;
+            height: 450px;
+            border: 1px solid #eee;
+        }
+        
+        .split-container {
+            display: flex;
+            margin-bottom: 40px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        h3 {
+            color: #2c3e50;
+            margin-top: 25px;
+        }
+        
+        p {
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            color: #34495e;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        #pastDueChart, #debtIncomeChart {
+            width: 100%;
+            height: 400px;
+        }
+        
+        /* Footer Styles */
+        .site-footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 50px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .site-footer .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .footer-brand {
+            flex: 0 0 25%;
+            margin-bottom: 20px;
+        }
+        
+        .footer-brand h3 {
+            color: #3498db;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .footer-brand p {
+            color: #bdc3c7;
+            margin-bottom: 0;
+        }
+        
+        .footer-links {
+            flex: 0 0 70%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .link-group {
+            flex: 0 0 30%;
+            margin-bottom: 20px;
+        }
+        
+        .link-group h4 {
+            color: #3498db;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .link-group ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .link-group li {
+            margin-bottom: 8px;
+        }
+        
+        .link-group a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .link-group a:hover {
+            color: #3498db;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #34495e;
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .footer-bottom p {
+            margin: 0;
+            color: #95a5a6;
+        }
+        
+        .social-icons a {
+            color: #bdc3c7;
+            font-size: 1.5rem;
+            margin-left: 15px;
+            transition: color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            color: #3498db;
+        }
+        
+        @media (max-width: 900px) {
+            .visualization-area, .footer-content {
+                flex-direction: column;
+            }
+            .text-section, .graph-section, .footer-brand, .footer-links, .link-group {
+                width: 100%;
+                padding-right: 0;
+                flex: 0 0 100%;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+            .social-icons {
+                margin-top: 15px;
+            }
+            .social-icons a {
+                margin: 0 7px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Debt Ratio v/s Monthly Income</h1>
+        </div>
+        <div class="visualization-area">
+            <!-- Left side: Text content -->
+            <div class="text-section">
+                <h2 class="section-title">Debt Ratio vs Monthly Income</h2>
+                <div class="section-content">
+                    <p>This visualization explores the relationship between a borrower's debt ratio and their monthly income, revealing key patterns in loan default behavior.</p>
+                    <p>Higher debt ratios generally correlate with increased default risk, but this relationship is modulated by income levels in interesting ways.</p>
+                    <p>The scatter plot shows how borrowers with similar debt ratios may have different default outcomes depending on their income bracket.</p>
+                    <p>Key insights:</p>
+                    <ul>
+                        <li>Lower-income borrowers show higher sensitivity to debt ratio increases</li>
+                        <li>A threshold effect appears at approximately 0.4 debt ratio</li>
+                        <li>High-income borrowers demonstrate resilience even at elevated debt ratios</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Right side: Plotly graph -->
+            <div class="graph-section">
+                <div id="plotly-graph"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Sample data for debt ratio vs monthly income
+        const monthlyIncomes = [2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000];
+        const debtRatios = [0.45, 0.42, 0.38, 0.35, 0.32, 0.30, 0.28, 0.26, 0.25];
+        const defaultRisk = [0.65, 0.55, 0.45, 0.40, 0.32, 0.25, 0.20, 0.15, 0.12];
+        
+        // Create bubbles with size representing default risk
+        const trace1 = {
+          x: monthlyIncomes,
+          y: debtRatios,
+          mode: 'markers',
+          type: 'scatter',
+          name: 'Default Risk',
+          marker: {
+            size: defaultRisk.map(risk => risk * 50),  // Scale the size for visibility
+            color: defaultRisk.map(risk => risk * 100),  // Color gradient based on risk
+            colorscale: 'Blues',
+            reversescale: true,
+            showscale: true,
+            colorbar: {
+              title: 'Default Risk',
+              tickformat: ',.0%',
+              titlefont: {
+                family: 'Montserrat, sans-serif'
+              }
+            },
+            opacity: 0.8,
+            line: {
+              color: 'rgba(0, 102, 204, 0.8)',
+              width: 1
+            }
+          },
+          text: monthlyIncomes.map((income, i) => 
+            `Monthly Income: $${income}<br>Debt Ratio: ${(debtRatios[i] * 100).toFixed(1)}%<br>Default Risk: ${(defaultRisk[i] * 100).toFixed(1)}%`
+          ),
+          hoverinfo: 'text'
+        };
+        
+        // Create a fit line to show trend
+        const trace2 = {
+          x: monthlyIncomes,
+          y: debtRatios,
+          mode: 'lines',
+          type: 'scatter',
+          name: 'Trend Line',
+          line: {
+            color: '#0066CC',
+            width: 2,
+            dash: 'dot'
+          }
+        };
+        
+        // Create the plot
+        Plotly.newPlot('plotly-graph', [trace1, trace2], {
+          title: {
+            text: 'Debt Ratio vs Monthly Income',
+            font: {
+              family: 'Montserrat, sans-serif',
+              size: 20,
+              color: '#0066CC'
+            }
+          },
+          xaxis: {
+            title: 'Monthly Income ($)',
+            titlefont: {
+              family: 'Montserrat, sans-serif',
+              size: 16
+            },
+            tickprefix: '$'
+          },
+          yaxis: {
+            title: 'Debt Ratio',
+            titlefont: {
+              family: 'Montserrat, sans-serif',
+              size: 16
+            },
+            tickformat: ',.0%'
+          },
+          hovermode: 'closest',
+          legend: {
+            x: 0.05,
+            y: 0.95,
+            bgcolor: 'rgba(255, 255, 255, 0.8)',
+            font: {
+              family: 'Montserrat, sans-serif'
+            }
+          },
+          margin: { t: 70, b: 70, l: 70, r: 50 }
+        });
+      });
+    </script>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Past Due Payments Trend</h1>
+        </div>
+        <div class="visualization-area">
+            <div class="split-container">
+                <div class="text-section">
+                    <h2>Past Due Payments Trend</h2>
+                    <div class="section-content">
+                        <p>This visualization tracks the frequency of late payments across three severity levels:</p>
+                        <ul>
+                            <li>30-59 days past due</li>
+                            <li>60-89 days past due</li>
+                            <li>90+ days late</li>
+                        </ul>
+                        <h3>Key Risk Indicators</h3>
+                        <p>The visualization highlights critical thresholds where intervention strategies should be considered:</p>
+                        <ul>
+                            <li>Any occurrence of 90+ days delinquency indicates a high probability of default</li>
+                            <li>Multiple instances of 60-89 days delinquency suggest decreasing financial stability</li>
+                            <li>Patterns of escalating delinquency severity over time require immediate attention</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="graph-section">
+                    <div id="pastDueChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Past Due Payments chart
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            const trace1 = {
+                x: months,
+                y: [20, 14, 25, 16, 18, 22, 19, 15, 12, 16, 14, 17],
+                type: 'bar',
+                name: '30-59 days',
+                marker: {
+                    color: '#74b9ff'
+                }
+            };
+            
+            const trace2 = {
+                x: months,
+                y: [12, 9, 15, 8, 7, 11, 10, 6, 5, 8, 9, 10],
+                type: 'bar',
+                name: '60-89 days',
+                marker: {
+                    color: '#ff7675'
+                }
+            };
+            
+            const trace3 = {
+                x: months,
+                y: [5, 3, 8, 4, 2, 6, 5, 3, 2, 4, 5, 6],
+                type: 'bar',
+                name: '90+ days',
+                marker: {
+                    color: '#d63031'
+                }
+            };
+            
+            const layout1 = {
+                title: 'Past Due Payments by Month',
+                barmode: 'group',
+                hovermode: 'closest',
+                xaxis: {
+                    title: 'Month'
+                },
+                yaxis: {
+                    title: 'Number of Accounts'
+                },
+                legend: {
+                    x: 0.5,
+                    y: 1.15,
+                    orientation: 'h'
+                }
+            };
+            
+            Plotly.newPlot('pastDueChart', [trace1, trace2, trace3], layout1, {responsive: true});
+        });
+    </script>
+</body>
+</html>
+
+<!-- Footer added outside the main container to avoid conflicts -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>LoanWise</h3>
+                <p>Intelligent loan default prediction platform</p>
+            </div>
+            
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#description">Overview</a></li>
+                        <li><a href="#visualization">Visualizations</a></li>
+                    </ul>
+                </div>
+                
+                <div class="link-group">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="link-group">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:shubanborkar@gmail.com">shubanborkar@gmail.com</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 LoanWise. All rights reserved.</p>
+            <div class="social-icons">
+                <a href="https://www.linkedin.com/in/shuban-borkar/" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://github.com/shubanborkar" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}

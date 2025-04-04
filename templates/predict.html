@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Loan Default Prediction{% endblock %}
+
+{% block content %}
+<div class="prediction-container">
+    <div class="prediction-header">
+        <h1>Loan Default Risk Assessment</h1>
+        <p>Enter customer information below to evaluate their loan default probability.</p>
+    </div>
+    
+    <form action="{{ url_for('predict') }}" method="post" class="prediction-form" id="loanPredictionForm">
+        <div class="form-sections">
+            <div class="form-section">
+                <h3>Personal Information</h3>
+                
+                <div class="form-group">
+                    <label for="age">Age <span class="required">*</span></label>
+                    <input type="number" id="age" name="age" class="form-control" required min="18" max="100" placeholder="18-99">
+                    <span class="input-help">Customer's age in years</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dependents">Number of Dependents <span class="required">*</span></label>
+                    <input type="number" id="dependents" name="dependents" class="form-control" required min="0" max="20" placeholder="0-20">
+                    <span class="input-help">People dependent on the customer's income</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="monthlyIncome">Monthly Income (TN$) <span class="required">*</span></label>
+                    <input type="number" id="monthlyIncome" name="monthlyIncome" class="form-control" required min="0" step="0.01" placeholder="e.g., 50000">
+                    <span class="input-help">Gross monthly income in Taiwan Dollars</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="debtRatio">Debt Ratio <span class="required">*</span></label>
+                    <input type="number" id="debtRatio" name="debtRatio" class="form-control" required min="0" max="1" step="0.01" placeholder="0.00-1.00">
+                    <span class="input-help">Monthly debt payments ÷ monthly gross income</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="revolvingUtilization">Revolving Utilization <span class="required">*</span></label>
+                    <input type="number" id="revolvingUtilization" name="revolvingUtilization" class="form-control" required min="0" max="1" step="0.01" placeholder="0.00-1.00">
+                    <span class="input-help">Credit balance ÷ total credit limits</span>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Credit History</h3>
+                
+                <div class="form-group">
+                    <label for="late30To59Days">30-59 Days Late <span class="required">*</span></label>
+                    <input type="number" id="late30To59Days" name="late30To59Days" class="form-control" required min="0" placeholder="e.g., 0-5">
+                    <span class="input-help">Times 30-59 days past due</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="late60To89Days">60-89 Days Late <span class="required">*</span></label>
+                    <input type="number" id="late60To89Days" name="late60To89Days" class="form-control" required min="0" placeholder="e.g., 0-5">
+                    <span class="input-help">Times 60-89 days past due</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="late90PlusDays">90+ Days Late <span class="required">*</span></label>
+                    <input type="number" id="late90PlusDays" name="late90PlusDays" class="form-control" required min="0" placeholder="e.g., 0-5">
+                    <span class="input-help">Times 90 or more days past due</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="openCreditLines">Open Credit Lines & Loans <span class="required">*</span></label>
+                    <input type="number" id="openCreditLines" name="openCreditLines" class="form-control" required min="0" placeholder="e.g., 1-20">
+                    <span class="input-help">Number of open loans and credit lines</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="realEstateLoans">Real Estate Loans <span class="required">*</span></label>
+                    <input type="number" id="realEstateLoans" name="realEstateLoans" class="form-control" required min="0" placeholder="e.g., 0-10">
+                    <span class="input-help">Mortgage and real estate loans including HELOCs</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-footer">
+            <button type="reset" class="reset-btn">Reset Form</button>
+            <button type="submit" class="submit-btn">Calculate Risk</button>
+        </div>
+    </form>
+    
+    {% if prediction is defined %}
+    <div class="prediction-result {% if prediction == 1 %}high-risk{% else %}low-risk{% endif %} animate-fade-in">
+        <h3 class="result-title">Risk Assessment Result</h3>
+        <div class="result-indicator">
+            <div class="risk-meter">
+                <div class="risk-level {% if prediction == 1 %}high{% else %}low{% endif %}"></div>
+            </div>
+            <div class="result-score">{% if prediction == 1 %}High Risk{% else %}Low Risk{% endif %}</div>
+        </div>
+        <p class="result-message">
+            {% if prediction == 1 %}
+                This customer profile indicates a <strong>high probability of loan default</strong> based on the provided financial data.
+            {% else %}
+                This customer profile indicates a <strong>low probability of loan default</strong> based on the provided financial data.
+            {% endif %}
+        </p>
+        <div class="result-actions">
+            <button class="new-assessment-btn" onclick="document.getElementById('loanPredictionForm').reset();">New Assessment</button>
+            <button class="print-btn" onclick="window.print();">Print Report</button>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>LoanWise</h3>
+                <p>Intelligent loan default prediction platform</p>
+            </div>
+            
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#description">Overview</a></li>
+                        <li><a href="#visualization">Visualizations</a></li>
+                    </ul>
+                </div>
+                
+                <div class="link-group">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="link-group">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:shubanborkar@gmail.com">shubanborkar@gmail.com</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 LoanWise. All rights reserved.</p>
+            <div class="social-icons">
+                <a href="https://www.linkedin.com/in/shuban-borkar/" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://github.com/shubanborkar" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+{% endblock %}
