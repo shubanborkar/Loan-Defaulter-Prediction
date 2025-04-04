@@ -20,3 +20,5 @@ flask_caching
 pandas
 scikit-learn
 matplotlib
+plotly
+seaborn
